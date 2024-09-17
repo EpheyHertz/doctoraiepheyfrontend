@@ -3,9 +3,9 @@ import { isAuthenticated } from '../utils/auth';
 import React, { useState, useEffect, useCallback,useLayoutEffect } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useRouter } from 'next/navigation';
-import { useSession } from "next-auth/react";
+
 const UserProfile = () => {
-  const { data: session } = useSession();  //
+   //
   const router = useRouter();
   // useEffect(() => {
   //   if (session) {

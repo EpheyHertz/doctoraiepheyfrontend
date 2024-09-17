@@ -106,6 +106,12 @@ const Login = () => {
               Sign Up
             </Link>
           </p>
+          <p className="text-center text-gray-600">
+            Forgot Password?{' '}
+            <Link href="/auth/password-reset" className="text-blue-600 hover:underline">
+              Reset Your Password
+            </Link>
+          </p>
         </form>
       </div>
     </div>
