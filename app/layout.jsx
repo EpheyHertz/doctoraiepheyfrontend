@@ -14,9 +14,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`bg-gray-50 text-gray-800 antialiased`}>
-        
-          <ClientProvider>
-            <TokenRefreshHandler />
+        <ClientProvider>
+          <TokenRefreshHandler />
+          <ClientSessionProvider>
             <div className="min-h-screen flex flex-col">
               {/* Navbar */}
               <header className="bg-blue-600 text-white shadow-md">
@@ -37,8 +37,8 @@ export default function RootLayout({ children }) {
                 </div>
               </footer>
             </div>
-          </ClientProvider>
-          
+          </ClientSessionProvider>
+        </ClientProvider>
       </body>
     </html>
   );
