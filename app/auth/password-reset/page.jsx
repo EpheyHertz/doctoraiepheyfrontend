@@ -8,7 +8,7 @@ const PasswordResetRequest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://doctorai-cw25.onrender.com';
       const response = await axios.post(`${apiUrl}/apis/password-reset-request/`, { email });
       alert(response.data.message);
       setEmail(''); 

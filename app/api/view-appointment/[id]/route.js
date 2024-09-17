@@ -8,7 +8,7 @@ export async function GET(request, { params }) {
 
   try {
     // Fetch all appointments for the user
-    const appointmentsResponse = await fetch('http://localhost:8000/apis/my-appointments/', {
+    const appointmentsResponse = await fetch('https://doctorai-cw25.onrender.com/apis/my-appointments/', {
       headers: {
         'Authorization': `Bearer ${token}`, // Include 'Bearer ' if using JWT
       },

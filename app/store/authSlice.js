@@ -6,7 +6,7 @@ export const loginUser = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       // First, authenticate the user with email, password, and role
-      const loginResponse = await fetch('http://127.0.0.1:8000/apis/login/', {
+      const loginResponse = await fetch('https://doctorai-cw25.onrender.com/apis/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -25,7 +25,7 @@ export const loginUser = createAsyncThunk(
       }
 
       // If the login is successful, fetch the token from /token/ endpoint
-      const tokenResponse = await fetch('http://127.0.0.1:8000/apis/token/', {
+      const tokenResponse = await fetch('https://doctorai-cw25.onrender.com/apis/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

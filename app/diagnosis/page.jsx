@@ -40,7 +40,7 @@ export default function DiagnosisPage() {
   const fetchChatMessages = async (chatId) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://127.0.0.1:8000/apis/user/chats/${chatId}/`, {
+      const res = await fetch(`https://doctorai-cw25.onrender.com/apis/user/chats/${chatId}/`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,

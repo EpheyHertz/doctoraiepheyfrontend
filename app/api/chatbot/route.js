@@ -54,7 +54,7 @@ export async function POST(request) {
     // Perform an Axios request to the backend
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/apis/chatbotdiagnosis/', 
+        'https://doctorai-cw25.onrender.com/apis/chatbotdiagnosis/', 
         { message, chat_id }, // Send message and chat_id to the backend
         {
           headers: {
@@ -114,7 +114,7 @@ export async function GET(request) {
 
     // Perform an Axios GET request to the backend to fetch all chats
     try {
-      const response = await axios.get('http://127.0.0.1:8000/apis/user/chats/', {
+      const response = await axios.get('https://doctorai-cw25.onrender.com/apis/user/chats/', {
         headers: {
           Authorization: `Bearer ${token}`, // Include token in the headers
         },

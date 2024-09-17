@@ -32,7 +32,7 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/apis/password-reset-confirm/', {
+    const response = await axios.post('https://doctorai-cw25.onrender.com/apis/password-reset-confirm/', {
       token,
       email,
       new_password: newPassword,

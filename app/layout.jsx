@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`bg-gray-50 text-gray-800 antialiased`}>
-        <ClientSessionProvider>
+        
           <ClientProvider>
             <TokenRefreshHandler />
             <div className="min-h-screen flex flex-col">
@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
               </footer>
             </div>
           </ClientProvider>
-          </ClientSessionProvider>
+          
       </body>
     </html>
   );

@@ -8,7 +8,7 @@ export const refreshAccessToken = async () => {
         throw new Error('No refresh token found.');
       }
   
-      const response = await fetch('http://127.0.0.1:8000/apis/token/refresh/', {
+      const response = await fetch('https://doctorai-cw25.onrender.com/apis/token/refresh/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
