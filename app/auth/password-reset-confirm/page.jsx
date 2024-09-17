@@ -1,6 +1,6 @@
 'use client';
 
-
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -53,6 +53,7 @@ export default function PasswordResetConfirm() {
   };
 
   return (
+    <Suspense>
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center text-gray-800">Reset Password</h2>
@@ -122,5 +123,6 @@ export default function PasswordResetConfirm() {
         </form>
       </div>
     </div>
+  </Suspense>
   );
 }
