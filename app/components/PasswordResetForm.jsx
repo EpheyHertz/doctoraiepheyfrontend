@@ -3,12 +3,17 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
-
+function useQueryParams() {
+    const searchParams = useSearchParams();
+    const token = searchParams.get('token');
+    const email = searchParams.get('email');
+  
+    return { token, email };
+  }
 export default function PasswordResetForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
-  const email = searchParams.get('email');
+ 
+  const { token, email } = useQueryParams(); 
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
