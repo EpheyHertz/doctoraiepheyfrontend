@@ -108,7 +108,7 @@ const BookAppointmentPage = () => {
       setAppointmentDate('');
       setAppointmentTime('');
       setReason('');
-      router.push('/my-appointment');
+      router.push('/my-appointments');
     } catch (error) {
       console.error('Failed to book appointment:', error);
       alert('Failed to book appointment. Please try again.');
