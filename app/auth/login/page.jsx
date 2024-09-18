@@ -15,6 +15,7 @@ const Login = () => {
     password: '',
     role: 'patient',
   });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,13 +35,18 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch(loginUser(formData));
+    setLoading(true);
+    dispatch(loginUser(formData)).finally(() => {
+      setLoading(false);
+    });
     setFormData({ email: '', password: '', role: 'patient' });
   };
 
   const handleGoogleSignIn = () => {
-    alert("Coming Soon!!!")
-    // signIn('google');
+    alert("Coming Soon!!!");
+    // Optionally, include loading for the Google sign-in as well.
+    // setLoading(true);
+    // signIn('google').finally(() => setLoading(false));
   };
 
   return (
@@ -60,6 +66,7 @@ const Login = () => {
               onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               required
+              disabled={loading}
             />
           </div>
           <div>
@@ -72,6 +79,7 @@ const Login = () => {
               onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               required
+              disabled={loading}
             />
           </div>
           <div>
@@ -83,6 +91,7 @@ const Login = () => {
               onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               required
+              disabled={loading}
             >
               <option value="patient">Patient</option>
               <option value="doctor">Doctor</option>
@@ -90,15 +99,17 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
+            className={`w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </button>
           <button
             onClick={handleGoogleSignIn}
-            className="w-full mt-2 bg-red-500 text-white p-2 rounded-md hover:bg-red-600"
+            className={`w-full mt-2 bg-red-500 text-white p-2 rounded-md hover:bg-red-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
           >
-            Sign in with Google
+            {loading ? 'Please wait...' : 'Sign in with Google'}
           </button>
           <p className="text-center text-gray-600">
             Don&apos;t have an account?{' '}

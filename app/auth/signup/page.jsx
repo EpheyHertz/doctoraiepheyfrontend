@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -11,6 +12,8 @@ const Signup = () => {
     role: 'patient',
   });
   const [errors, setErrors] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // Add state to track password visibility
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -23,29 +26,33 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-    const response = await fetch('https://doctorai-cw25.onrender.com/apis/signup/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
-    const result = await response.json();
-    console.log('Backend Response:', result); // Check backend response
+      const response = await fetch('https://doctorai-cw25.onrender.com/apis/signup/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      // console.log('Backend Response:', result);
 
-    if (response.ok) {
-      // Success case, redirect to login page
-      alert(result.message); // Show success message
-      router.push('/auth/login'); // Redirect
-    } else {
-      // If not successful, show errors
-      setErrors(result.message || 'Registration failed');
+      if (response.ok) {
+        alert(result.message); // Show success message
+        router.push('/auth/login'); // Redirect to login page
+      } else {
+        setErrors(result.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setErrors('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Error during registration:', error);
-    setErrors('An error occurred. Please try again.');
-  }
-    console.log('Form Data:', formData);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState); // Toggle password visibility
   };
 
   return (
@@ -64,6 +71,7 @@ const Signup = () => {
               onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               required
+              disabled={loading}
             />
           </div>
           <div>
@@ -76,19 +84,30 @@ const Signup = () => {
               onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               required
+              disabled={loading}
             />
           </div>
           <div>
             <label htmlFor="password" className="block text-gray-700">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'} // Conditionally render input type
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-800"
+              >
+                {showPassword ? 'Hide' : 'Show'} {/* Toggle button text */}
+              </button>
+            </div>
           </div>
           <div>
             <label htmlFor="role" className="block text-gray-700">Role</label>
@@ -99,6 +118,7 @@ const Signup = () => {
               onChange={handleChange}
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
               required
+              disabled={loading}
             >
               <option value="patient">Patient</option>
               <option value="doctor">Doctor</option>
@@ -106,9 +126,10 @@ const Signup = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
+            className={`w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
           >
-            Sign Up
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
           <p className="text-center text-gray-600">
             Already have an account?{' '}

@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -8,7 +9,7 @@ export default function DiagnosisPage() {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [chatList, setChatList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);  // Loading state for message sending
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [chatId, setChatId] = useState(null);
 
@@ -69,7 +70,7 @@ export default function DiagnosisPage() {
 
   const sendMessage = async () => {
     if (!message.trim()) return;
-    setLoading(true);
+    setLoading(true);  // Set loading to true
     const userMessage = { sender: 'user', message };
 
     setChatHistory([...chatHistory, userMessage]);
@@ -99,18 +100,18 @@ export default function DiagnosisPage() {
         { sender: 'bot', message: 'An error occurred. Please try again.' },
       ]);
     } finally {
-      setLoading(false);
+      setLoading(false);  // Set loading to false once done
     }
   };
 
   const cancelChat = () => {
-    fetchChatList()
+    fetchChatList();
     setChatHistory([]);
     setMessage('');
   };
 
   const startNewChat = () => {
-    fetchChatList()
+    fetchChatList();
     setChatId(null);
     setChatHistory([]);
     setMessage('');
@@ -182,7 +183,7 @@ export default function DiagnosisPage() {
               ))}
             </div>
 
-            {/* Chat input and buttons */}
+            {/* Chat input and buttons */} 
             <div className="flex items-center space-x-4">
               <input
                 type="text"
@@ -190,14 +191,14 @@ export default function DiagnosisPage() {
                 placeholder="Type your symptoms..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                disabled={loading}
+                disabled={loading}  // Disable input while loading
               />
               <button
                 className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 onClick={sendMessage}
-                disabled={loading}
+                disabled={loading}  // Disable button while loading
               >
-                {loading ? 'Sending...' : 'Send'}
+                {loading ? 'Sending...' : 'Send'}  {/* Show "Sending..." while loading */}
               </button>
             </div>
 

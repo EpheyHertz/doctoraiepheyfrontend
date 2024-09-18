@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -21,11 +22,12 @@ const BookAppointmentPage = () => {
   const [doctors, setDoctors] = useState([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState('');
-  const [appointmentDate, setAppointmentDate] = useState(''); // Set initial state as empty string
-  const [appointmentTime, setAppointmentTime] = useState(''); // State for time input
+  const [appointmentDate, setAppointmentDate] = useState('');
+  const [appointmentTime, setAppointmentTime] = useState('');
   const [reason, setReason] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState([]);
   const [token, setToken] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -61,11 +63,11 @@ const BookAppointmentPage = () => {
   }, [selectedSpecialty, doctors]);
 
   const handleDateChange = (e) => {
-    setAppointmentDate(e.target.value); // Store date as a string
+    setAppointmentDate(e.target.value);
   };
 
   const handleTimeChange = (e) => {
-    setAppointmentTime(e.target.value); // Store time as a string
+    setAppointmentTime(e.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -79,11 +81,12 @@ const BookAppointmentPage = () => {
       return;
     }
 
-    // Combine date and time
     const appointmentDateTime = new Date(`${appointmentDate}T${appointmentTime}`);
     console.log('Selected Date:', appointmentDate);
     console.log('Selected Time:', appointmentTime);
     console.log('Combined DateTime:', appointmentDateTime.toISOString());
+
+    setLoading(true); // Set loading to true
 
     try {
       await axios.post(
@@ -105,10 +108,12 @@ const BookAppointmentPage = () => {
       setAppointmentDate('');
       setAppointmentTime('');
       setReason('');
-      router.push('/my-appointment')
+      router.push('/my-appointment');
     } catch (error) {
       console.error('Failed to book appointment:', error);
       alert('Failed to book appointment. Please try again.');
+    } finally {
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -187,7 +192,9 @@ const BookAppointmentPage = () => {
               />
             </div>
 
-            <button className="submit-btn" type="submit">Book Appointment</button>
+            <button className={`submit-btn ${loading ? 'loading' : ''}`} type="submit" disabled={loading}>
+              {loading ? 'Booking...' : 'Book Appointment'}
+            </button>
           </form>
         </div>
       </div>
@@ -261,6 +268,11 @@ const BookAppointmentPage = () => {
 
         .submit-btn:hover {
           background-color: #005bb5;
+        }
+
+        .submit-btn.loading {
+          background-color: #005bb5;
+          cursor: not-allowed;
         }
       `}</style>
     </ProtectedRoute>

@@ -1,17 +1,20 @@
 'use client';
+
 import { useState } from 'react';
 import axios from 'axios';
 
 const PasswordResetRequest = () => {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);  // State to track loading status
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);  // Set loading to true when the form is submitted
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://doctorai-cw25.onrender.com';
       const response = await axios.post(`${apiUrl}/apis/password-reset-request/`, { email });
       alert(response.data.message);
-      setEmail(''); 
+      setEmail('');  // Clear the email input after submission
     } catch (error) {
       if (error.response) {
         console.error('Server Error:', error.response.data);
@@ -23,6 +26,8 @@ const PasswordResetRequest = () => {
         console.error('Error:', error.message);
         alert('Error: ' + error.message);
       }
+    } finally {
+      setLoading(false);  // Set loading to false once the process is done
     }
   };
 
@@ -45,9 +50,10 @@ const PasswordResetRequest = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+            disabled={loading}  // Disable the button when loading
+            className={`w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Send Reset Link
+            {loading ? 'Sending...' : 'Send Reset Link'}  {/* Show 'Sending...' while loading */}
           </button>
         </form>
       </div>

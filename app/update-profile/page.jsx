@@ -5,27 +5,8 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import { useRouter } from 'next/navigation';
 
 const UserProfile = () => {
-   //
-  const router = useRouter();
-  // useEffect(() => {
-  //   if (session) {
-  //     const { accessToken, idToken, code } = session; // Adjust according to your actual session data structure
-  //     // Send token to backend (optional - depends on your API design)
-  //     fetch('http://127.0.0.1:8000/apis/auth/google/', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-        
-  //       },
-  //       body: JSON.stringify({ access_token: session.accessToken,code:session.code,id_token:session.idToken }),
-  //     })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       console.log("Google token exchange response:", data);
-  //     });
-  //   }
-  // }, [session]);
-  useLayoutEffect(() => {
+   const router = useRouter();
+   useLayoutEffect(() => {
         const checkAuth = () => {
           if (!isAuthenticated()) {
             router.push('/auth/login'); // Redirect to home page if not authenticated
@@ -33,7 +14,8 @@ const UserProfile = () => {
         };
     
         checkAuth();
-      }, [router]);
+   }, [router]);
+
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
     profile: {
@@ -52,6 +34,7 @@ const UserProfile = () => {
     },
   });
   const [errors, setErrors] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
 
   const isTokenExpired = (token) => {
     if (!token) return true;
@@ -60,7 +43,7 @@ const UserProfile = () => {
       const expiry = decodedToken.exp;
       return Date.now() >= expiry * 1000;
     } catch (error) {
-      console.error('Error decoding token:');
+      // console.error('Error decoding token:');
       return true; // Treat as expired if there's an issue decoding
     }
   };
@@ -181,6 +164,7 @@ const UserProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors(null);
+    setLoading(true); // Set loading state to true
 
     try {
       const response = await fetchWithTokenRefresh('https://doctorai-cw25.onrender.com/apis/update/', {
@@ -193,7 +177,9 @@ const UserProfile = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Profile updated:', result.message);
+        alert(result.message)
+        router.push('/view-profile')
+        // console.log('Profile updated:', result.message);
       } else {
         const result = await response.json();
         setErrors(result.message || 'Error updating profile.');
@@ -201,6 +187,8 @@ const UserProfile = () => {
     } catch (error) {
       console.error('Error updating profile:');
       setErrors('Network error. Please try again later.');
+    } finally {
+      setLoading(false); // Set loading state to false after the operation
     }
   };
 
@@ -246,18 +234,18 @@ const UserProfile = () => {
             />
           </div>
           <div className="form-group">
-  <label className="text-gray-700 font-medium">Gender:</label>
-  <select
-    name="profile.gender"
-    value={formData.profile.gender || ''}
-    onChange={handleChange}
-    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
-    <option value="">Select Gender</option>
-    <option value="M">Male</option>
-    <option value="F">Female</option>
-  </select>
-</div>
+            <label className="text-gray-700 font-medium">Gender:</label>
+            <select
+              name="profile.gender"
+              value={formData.profile.gender || ''}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
 
           <div className="form-group">
             <label className="text-gray-700 font-medium">Phone Number:</label>
@@ -286,13 +274,12 @@ const UserProfile = () => {
             <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-800">Doctor Details</h3>
             <div className="grid grid-cols-1 gap-4">
               <div className="form-group">
-                <label className="text-gray-700 font-medium">Name:</label>
+                <label className="text-gray-700 font-medium">Doctor Name:</label>
                 <input
                   type="text"
                   name="doctor_details.name"
                   value={formData.doctor_details.name || ''}
                   onChange={handleChange}
-                  disabled
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -315,13 +302,12 @@ const UserProfile = () => {
             <h3 className="text-xl font-semibold mt-4 mb-2 text-gray-800">Patient Details</h3>
             <div className="grid grid-cols-1 gap-4">
               <div className="form-group">
-                <label className="text-gray-700 font-medium">Name:</label>
+                <label className="text-gray-700 font-medium">Patient Name:</label>
                 <input
                   type="text"
                   name="patient_details.name"
                   value={formData.patient_details.name || ''}
                   onChange={handleChange}
-                  disabled
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -338,7 +324,6 @@ const UserProfile = () => {
               <div className="form-group">
                 <label className="text-gray-700 font-medium">Medical History:</label>
                 <textarea
-                  type="text"
                   name="patient_details.medical_history"
                   value={formData.patient_details.medical_history || ''}
                   onChange={handleChange}
@@ -349,17 +334,16 @@ const UserProfile = () => {
           </div>
         )}
 
-        <div className="text-center">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
-          >
-            Save Profile
-          </button>
-        </div>
+        <button
+          type="submit"
+          className={`w-full bg-blue-500 text-white py-2 px-4 rounded-md ${loading ? 'opacity-50' : 'hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'} `}
+          disabled={loading}
+        >
+          {loading ? 'Saving...' : 'Save Changes'}
+        </button>
       </form>
     </div>
-    </ProtectedRoute>
+    </ProtectedRoute> 
   );
 };
 
