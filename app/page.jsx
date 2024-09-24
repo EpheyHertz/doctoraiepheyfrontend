@@ -68,11 +68,11 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-gray-800 py-8">
+      {/* <footer className="bg-gray-800 py-8">
         <div className="container mx-auto text-center text-white">
           <p>&copy; 2024 Doctor AI. All rights reserved.</p>
         </div>
-      </footer>
+      </footer> */}
     </>
   );
 }

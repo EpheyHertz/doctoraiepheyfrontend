@@ -42,8 +42,12 @@ export const loginUser = createAsyncThunk(
         return rejectWithValue(errorMessage);
       }
 
-      // Return the token data if successful (access and refresh tokens)
-      return { access: tokenData.access, refresh: tokenData.refresh };
+      // Return the token data along with user info if needed
+      return {
+        access: tokenData.access,
+        refresh: tokenData.refresh,
+        user: loginData.user, // Assuming loginData includes user information
+      };
 
     } catch (error) {
       // If there is a network or other error, reject the promise
@@ -52,15 +56,24 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+const initialState = {
+  user: null,
+  token: null,
+  refreshToken: null,
+  isAuthenticated: false,
+  error: null,
+};
+
+// Check if running in a browser environment
+if (typeof window !== 'undefined') {
+  initialState.token = localStorage.getItem('token') || null;
+  initialState.refreshToken = localStorage.getItem('refreshToken') || null;
+  initialState.isAuthenticated = !!initialState.token; // true if token exists
+}
+
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    user: null,
-    token: null,
-    refreshToken: null,
-    isAuthenticated: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     logout: (state) => {
       state.user = null;
@@ -68,14 +81,20 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.isAuthenticated = false;
       state.error = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+      }
     },
     loginSuccess: (state, action) => {
-      state.token = action.payload.token; // Adjust according to the token structure
+      state.user = action.payload.user; // Store user information
+      state.token = action.payload.access; // Adjust according to the token structure
       state.isAuthenticated = true;
       state.error = null;
-      
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', action.payload.access);
+        localStorage.setItem('refreshToken', action.payload.refresh);
+      }
     },
     loginFailure: (state, action) => {
       state.error = action.payload.error;
@@ -86,10 +105,13 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.token = action.payload.access;
         state.refreshToken = action.payload.refresh;
+        state.user = action.payload.user; // Store user information
         state.isAuthenticated = true;
         state.error = null;
-        localStorage.setItem('token', action.payload.access);
-        localStorage.setItem('refreshToken', action.payload.refresh);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', action.payload.access);
+          localStorage.setItem('refreshToken', action.payload.refresh);
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.error = typeof action.payload === 'string' ? action.payload : 'Login failed';
@@ -98,7 +120,9 @@ const authSlice = createSlice({
   },
 });
 
+// Selectors
 export const { logout, loginSuccess, loginFailure } = authSlice.actions;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+export const selectUser = (state) => state.auth.user; // Selector for user information
 
 export default authSlice.reducer;

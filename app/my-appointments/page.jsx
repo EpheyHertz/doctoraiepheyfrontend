@@ -8,14 +8,14 @@ import ProtectedRoute from '../components/ProtectedRoute';
 const AppointmentsPage = () => {
   const router = useRouter();
 
-  useLayoutEffect(() => {
-    const checkAuth = () => {
-      if (!isAuthenticated()) {
-        router.push('/auth/login');
-      }
-    };
-    checkAuth();
-  }, [router]);
+  // useLayoutEffect(() => {
+  //   const checkAuth = () => {
+  //     if (!isAuthenticated()) {
+  //       router.push('/auth/login');
+  //     }
+  //   };
+  //   checkAuth();
+  // }, [router]);
 
   const [user, setUser] = useState(null);
   const [patients, setPatients] = useState([]);

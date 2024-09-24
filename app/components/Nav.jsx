@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 const Nav = () => {
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const router=useRouter()

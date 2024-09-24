@@ -6,15 +6,15 @@ import { useRouter } from 'next/navigation';
 
 const UserProfile = () => {
    const router = useRouter();
-   useLayoutEffect(() => {
-        const checkAuth = () => {
-          if (!isAuthenticated()) {
-            router.push('/auth/login'); // Redirect to home page if not authenticated
-          }
-        };
+  //  useLayoutEffect(() => {
+  //       const checkAuth = () => {
+  //         if (!isAuthenticated()) {
+  //           router.push('/auth/login'); // Redirect to home page if not authenticated
+  //         }
+  //       };
     
-        checkAuth();
-   }, [router]);
+  //       checkAuth();
+  //  }, [router]);
 
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({

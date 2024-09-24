@@ -3,7 +3,7 @@ import "./globals.css";
 import Nav from '@components/Nav';
 import ClientProvider from 'app/CloudProvider'; // Import the ClientProvider
 import TokenRefreshHandler from './components/TokenRefreshHandler';
-import ClientSessionProvider from './components/ClientSessionProvider'; // Import the new component
+import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 
 export const metadata = {
   title: "Doctor AI - Your Virtual Healthcare Assistant",
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
       <body className={`bg-gray-50 text-gray-800 antialiased`}>
         <ClientProvider>
           <TokenRefreshHandler />
-          <ClientSessionProvider>
+          <ProtectedRoute>
             <div className="min-h-screen flex flex-col">
               {/* Navbar */}
               <header className="bg-blue-600 text-white shadow-md">
@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
                 </div>
               </footer>
             </div>
-          </ClientSessionProvider>
+          </ProtectedRoute>
         </ClientProvider>
       </body>
     </html>
